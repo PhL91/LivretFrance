@@ -29,3 +29,19 @@ Exemple de lancement:
     2024-02-15       107.00                0       0.00          21       2.81
     Montant total couru:      23.81
     Montant total année:     241.42
+
+Exemple de fichier taux (il suffit de rajouter une ligne du même format à chaque changement de taux):
+    $ cat taux.txt
+    # Commentaire possible avec "#" en 1er caractère
+    2024-01-01 3.00
+
+Remarque: il y a au moins une ligne au 1er janvier!
+
+Exemple de fichier opération:
+    # Le solde initial doit être mis sur la première ligne avec la date du 31 décembre de l'année précédente
+    2023-12-31 5682.16
+    2024-01-09 1164
+    2024-01-23 -165
+    2024-02-09 1502
+    2024-02-15 107
+
