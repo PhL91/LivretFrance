@@ -3,6 +3,7 @@
 Petit programme C pour calculer les intérêts des livrets français type Livret A, LDDS,...
 
 L'aide:
+
     $ ./interet -h
     Utilisation: interet [OPTION]
       Calcul des intérêts des livrets type France avec intérêts par quinzaine
@@ -12,6 +13,7 @@ L'aide:
       -d,--date <date de simulation>	Défaut: aujourd'hui
 
 Exemple de lancement:
+
     $ ./interet
     
     Tableau d'évolution du taux d'intérêt:
@@ -31,6 +33,7 @@ Exemple de lancement:
     Montant total année:     241.42
 
 Exemple de fichier taux (il suffit de rajouter une ligne du même format à chaque changement de taux):
+
     $ cat taux.txt
     # Commentaire possible avec "#" en 1er caractère
     2024-01-01 3.00
@@ -38,6 +41,7 @@ Exemple de fichier taux (il suffit de rajouter une ligne du même format à chaq
 Remarque: il y a au moins une ligne au 1er janvier!
 
 Exemple de fichier opération:
+
     # Le solde initial doit être mis sur la première ligne avec la date du 31 décembre de l'année précédente
     2023-12-31 5682.16
     2024-01-09 1164
