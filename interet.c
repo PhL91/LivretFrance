@@ -368,11 +368,11 @@ nop=k;
 printf("Nombre d'opérations: %d\n",nop);
 montanttotalhui=0;
 montanttotalan=0;
-printf("Date op      Montant op   Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an\n");
+printf("Date op      Montant op Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an\n");
 for (i=0;i<nop;i++) {
 	montanttotalhui=montanttotalhui+cumulinterethui[i];
 	montanttotalan=montanttotalan+cumulinteretan[i];
-	printf("%s   %#10.2f                %d            %d %#10.2f          %d        %d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],nbjourhui[i],cumulinterethui[i],nbquinzan[i],nbjouran[i],cumulinteretan[i]);
+	printf("%s   %#10.2f           %4d          %4d %#10.2f        %4d       %4d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],nbjourhui[i],cumulinterethui[i],nbquinzan[i],nbjouran[i],cumulinteretan[i]);
 }
 
 printf("Montant total couru: %#10.2f\n",montanttotalhui);
