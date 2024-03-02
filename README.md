@@ -90,5 +90,3 @@ Le montant des intérêts n'est plus calculé en fonction d'un nombre de quinzai
 ```
 
 Comme vous pouvez le constater, ceci introduit de légères différences dans les montants. Cependant, pour une somme présente toute l'année, il n'y aura aucune différence entre les 2 méthodes.
-
-Il faut noter qu'il doit y avoir des méthodes de calcul encore différentes (exotiques?) car j'ai l'exemple d'une banque dont les calculs d'intérêts ne colle pas avec les 2 méthodes précédentes!
