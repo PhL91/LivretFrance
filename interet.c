@@ -37,12 +37,13 @@ void usage(char *argv0) {
 	printf("  -t,--taux <fichier taux>\t\tDéfaut: taux.txt\n");
 	printf("  -d,--date <date de simulation>\tDéfaut: aujourd'hui\n");
 	printf("  -m,--mode {jour|quinzaine}\t\tDéfaut: jour - Mode de calcul des intérêts\n");
+	printf("  -b,--bourso\t\t\t\tBoursobank (calcul sur 365 jours(bug?))\n");
 }
 
 int main(int argc, char *argv[]) {
 
 int i,k,c,qcourantetaux,qcouranteop,qhui,nop,cline=200,an,nbjourantot=0,flagdatesimu=0,nbquinzhui[MAXOP],nbquinzan[MAXOP],nbjouran[MAXOP],nbjourhui[MAXOP];
-bool jour=true,anbi;
+bool jour=true,anbi,bourso=false;
 char fichiertaux[MAXCHAR]="taux.txt";
 char fichieroperation[MAXCHAR]="operation.txt";
 FILE *pfichiertaux,*pfichieroperation;
@@ -62,13 +63,14 @@ static struct option long_options[] = {
 	{"operation",required_argument, NULL,  'o' },
 	{"date",     required_argument, NULL,  'd' },
 	{"mode",     required_argument, NULL,  'm' },
+	{"bourso",   no_argument,       NULL,  'b' },
 	{"help",     no_argument,       NULL,  'h' },
 	{0,          0,                 0,  0 }
 };
 
 /* Elements de la ligne de commande */
 while (1) {
-	c = getopt_long(argc, argv, "ht:o:d:m:",long_options, &option_index);
+	c = getopt_long(argc, argv, "ht:o:d:m:b",long_options, &option_index);
 	if (c == -1)
 		break;
 	switch (c) {
@@ -116,6 +118,9 @@ while (1) {
 					printf("mode doit être 'jour' ou 'quinzaine'\n");
 					exit(EXIT_FAILURE);
 					}
+			break;
+		case 'b':
+			bourso=true;
 			break;
 		case '?':
 			printf("Erreur dans les options!\n");
@@ -270,7 +275,7 @@ for (i=1;i<24;i++) {
 	}
 	else curtaux=pdt[i].taux;
 }
-
+if (bourso) nbjourantot=365;
 /*
 Boucle sur toutes les lignes d'opération:
 - Calcul du numéro de semaine sur laquelle s'applique l'opération
