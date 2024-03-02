@@ -18,6 +18,7 @@ Nombre maximum de caractères dans les noms de fichiers taux et operation
 #include <time.h>
 #include <getopt.h>
 #include <libgen.h>
+#include <stdbool.h>
 
 /*
 getfortnight: Renvoie un numéro de quinzaine [1-24] 
@@ -35,11 +36,13 @@ void usage(char *argv0) {
 	printf("  -o,--operation <fichier opération>\tDéfaut: operation.txt\n");
 	printf("  -t,--taux <fichier taux>\t\tDéfaut: taux.txt\n");
 	printf("  -d,--date <date de simulation>\tDéfaut: aujourd'hui\n");
+	printf("  -m,--mode {jour|quinzaine}\t\tDéfaut: jour - Mode de calcul des intérêts\n");
 }
 
 int main(int argc, char *argv[]) {
 
-int i,k,c,qcourantetaux,qcouranteop,qhui,nop,cline=200,flagdatesimu=0,nbquinzhui[MAXOP],nbquinzan[MAXOP];
+int i,k,c,qcourantetaux,qcouranteop,qhui,nop,cline=200,an,nbjourantot=0,flagdatesimu=0,nbquinzhui[MAXOP],nbquinzan[MAXOP],nbjouran[MAXOP],nbjourhui[MAXOP];
+bool jour=true,anbi;
 char fichiertaux[MAXCHAR]="taux.txt";
 char fichieroperation[MAXCHAR]="operation.txt";
 FILE *pfichiertaux,*pfichieroperation;
@@ -49,6 +52,7 @@ struct datetaux {
 	char ascdate[20];
 	float taux;
 	int fortnightno;
+	int nbjour;
 } pdt[24];
 struct tm tm,tmdatesimu;
 time_t u;
@@ -57,13 +61,14 @@ static struct option long_options[] = {
 	{"taux",     required_argument, NULL,  't' },
 	{"operation",required_argument, NULL,  'o' },
 	{"date",     required_argument, NULL,  'd' },
+	{"mode",     required_argument, NULL,  'm' },
 	{"help",     no_argument,       NULL,  'h' },
 	{0,          0,                 0,  0 }
 };
 
 /* Elements de la ligne de commande */
 while (1) {
-	c = getopt_long(argc, argv, "ht:o:d:",long_options, &option_index);
+	c = getopt_long(argc, argv, "ht:o:d:m:",long_options, &option_index);
 	if (c == -1)
 		break;
 	switch (c) {
@@ -99,6 +104,19 @@ while (1) {
 			flagdatesimu=1;
 			strcpy(datesimu,optarg);
 			break;
+		case 'm':
+			jour=true;
+			if (strcmp(optarg,"jour") == 0)
+				jour=true;
+			else
+				if(strcmp(optarg,"quinzaine") == 0)
+					jour=false;
+				else
+					{
+					printf("mode doit être 'jour' ou 'quinzaine'\n");
+					exit(EXIT_FAILURE);
+					}
+			break;
 		case '?':
 			printf("Erreur dans les options!\n");
 			exit(EXIT_FAILURE);
@@ -115,6 +133,48 @@ if (optind < argc) {
 	exit(EXIT_FAILURE);
 }
 
+/*
+Structure tm d'aujourd'hui ou à la date de simulation
+*/
+u=time(NULL);
+tm = *localtime(&u);
+/* Numéro de quinzaine d'aujourd'hui */
+if (flagdatesimu == 1 ) {
+	qhui=getfortnight(&tmdatesimu);
+	if (strftime(datesimu,20,"%F",&tmdatesimu) == 0 ) {
+		printf("Erreur de conversion avec strftime de la date: %s\n",datesimu);
+		exit(EXIT_FAILURE);
+	}
+	printf("\nDate prise en compte pour le calcul des intérêts courus: %s\n",datesimu);
+}
+else {
+	qhui=getfortnight(&tm);
+	printf("\nDate prise en compte pour le calcul des intérêts courus: aujourd'hui\n");
+}
+printf("Mode de calcul des intérêts:                             %s\n", (jour? "jour" : "quinzaine" ));
+/*
+Est-on en année bissextile?
+*/
+if (flagdatesimu == 1 ) {
+	an=tmdatesimu.tm_year+1900;
+	}
+else {
+	an=tm.tm_year+1900;
+}
+if (an % 400 == 0)
+	anbi=true;
+else
+	{
+	if (an % 100 == 0)
+		anbi=false;
+	else
+		{
+		if(an % 4 == 0)
+			anbi=true;
+		else
+			anbi=false;
+		}
+	}
 /*
 Initialisation du tableau datetaux
 */
@@ -157,9 +217,52 @@ pour chaque quinzaine.
 A la sortie de la boucle, le taux dans pdt est renseigné pour chaque quinzaine
 A noter que la valeur du taux au 1er janvier est obligatoire!
 pdt[0].taux correspond au taux du 1er janvier
+On en profite aussi pour calculer le nombre de jours dans chaque quinzaine (cas du mode "jour")
 */
 curtaux=pdt[0].taux;
+pdt[0].nbjour=15;
+nbjourantot=pdt[0].nbjour;
 for (i=1;i<24;i++) {
+	switch (i){
+		case 1:
+		case 5:
+		case 9:
+		case 13:
+		case 15:
+		case 19:
+		case 23:
+			pdt[i].nbjour=16;
+			nbjourantot=nbjourantot+pdt[i].nbjour;
+			break;
+		case 2:
+		case 4:
+		case 6:
+		case 7:
+		case 8:
+		case 10:
+		case 11:
+		case 12:
+		case 14:
+		case 16:
+		case 17:
+		case 18:
+		case 20:
+		case 21:
+		case 22:
+			pdt[i].nbjour=15;
+			nbjourantot=nbjourantot+pdt[i].nbjour;
+			break;
+		case 3:
+			if (anbi)
+				pdt[i].nbjour=14;
+			else
+				pdt[i].nbjour=13;
+			nbjourantot=nbjourantot+pdt[i].nbjour;
+			break;
+		default:
+			printf("Cas imprévu sur le nombre de jours par quinzaine: BUG\n");
+			exit(EXIT_FAILURE);
+	}
 	if (pdt[i].fortnightno == 0) {
 		pdt[i].fortnightno=i+1;
 		pdt[i].taux=curtaux;
@@ -179,24 +282,6 @@ On recherche le numéro de quinzaine d'aujourd'hui,
 sachant qu'il faut lui retirer "1" pour avoir les
 intérêts déjà acquis (quinzaine précédente)
 */
-/*
-Structure tm d'aujourd'hui ou à la date de simulation
-*/
-u=time(NULL);
-tm = *localtime(&u);
-/* Numéro de quinzaine d'aujourd'hui */
-if (flagdatesimu == 1 ) {
-	qhui=getfortnight(&tmdatesimu);
-	if (strftime(datesimu,20,"%F",&tmdatesimu) ==0 ) {
-		printf("Erreur de conversion avec strftime de la date: %s\n",datesimu);
-		exit(EXIT_FAILURE);
-	}
-	printf("Date prise en compte pour le calcul des intérêts courus: %s\n\n",datesimu);
-}
-else {
-	qhui=getfortnight(&tm);
-	printf("Date prise en compte pour le calcul des intérêts courus: aujourd'hui\n\n");
-}
 /*
 Les intérêts ne compteront que pour la quinzaine précédente
 */
@@ -240,15 +325,27 @@ Pour les montants négatifs, c'est la quinzaine de l'opération.
 	cumulinteretan[k]=0;
 	nbquinzhui[k]=0;
 	nbquinzan[k]=0;
+	nbjourhui[k]=0;
+	nbjouran[k]=0;
 	for (i=0;i<24;i++) {
 		tauxcourant=pdt[i].taux;
 		qcourantetaux=pdt[i].fortnightno;
 		if ( qcourantetaux >= qcouranteop ) {
-			cumulinteretan[k]=cumulinteretan[k]+montant[k]*tauxcourant/(24*100);
+			if (jour)
+				cumulinteretan[k]=cumulinteretan[k]+montant[k]*tauxcourant*pdt[i].nbjour/(nbjourantot*100);
+			else
+				cumulinteretan[k]=cumulinteretan[k]+montant[k]*tauxcourant/(24*100);
 			nbquinzan[k]=nbquinzan[k]+1;
+			nbjouran[k]=nbjouran[k]+pdt[i].nbjour;
 			if (qcourantetaux <= qhui ) {
-				cumulinterethui[k]=cumulinterethui[k]+montant[k]*tauxcourant/(24*100);
+				if (jour) {
+					cumulinterethui[k]=cumulinterethui[k]+montant[k]*tauxcourant*pdt[i].nbjour/(nbjourantot*100);
+					}
+				else {
+					cumulinterethui[k]=cumulinterethui[k]+montant[k]*tauxcourant/(24*100);
+					}
 				nbquinzhui[k]=nbquinzhui[k]+1;
+				nbjourhui[k]=nbjourhui[k]+pdt[i].nbjour;
 			}
 		}
 	}
@@ -266,11 +363,11 @@ nop=k;
 printf("Nombre d'opérations: %d\n",nop);
 montanttotalhui=0;
 montanttotalan=0;
-printf("Date op      Montant op   Nb quinz couru Int courus Nb quinz an     Int an\n");
+printf("Date op      Montant op   Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an\n");
 for (i=0;i<nop;i++) {
 	montanttotalhui=montanttotalhui+cumulinterethui[i];
 	montanttotalan=montanttotalan+cumulinteretan[i];
-	printf("%s   %#10.2f                %d %#10.2f          %d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],cumulinterethui[i],nbquinzan[i],cumulinteretan[i]);
+	printf("%s   %#10.2f                %d            %d %#10.2f          %d        %d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],nbjourhui[i],cumulinterethui[i],nbquinzan[i],nbjouran[i],cumulinteretan[i]);
 }
 
 printf("Montant total couru: %#10.2f\n",montanttotalhui);
