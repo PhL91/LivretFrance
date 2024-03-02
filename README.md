@@ -86,7 +86,7 @@ Le montant des intérêts n'est plus calculé en fonction d'un nombre de quinzai
 ```
 * J'ai retiré 1000€ le 17 janvier et le taux du livret est à 3%: les intérêts **non perçus** (retirés de la somme des intérêts) au 31 décembre:
 ```
--1000*(3/100)*((15+1*29+4*30+6*31)/366) = -28.69
+-1000*(3/100)*((16+1*29+4*30+6*31)/366) = -28.77
 ```
 
 Comme vous pouvez le constater, ceci introduit de légères différences dans les montants. Cependant, pour une somme présente toute l'année, il n'y aura aucune différence entre les 2 méthodes.
