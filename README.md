@@ -4,15 +4,15 @@ Petit programme C pour calculer les intérêts des livrets français type Livret
 
 L'aide:
 ```
- ./interet -h
+ $ ./interet -h
 Utilisation: interet [OPTION]
   Calcul des intérêts des livrets type France avec intérêts par quinzaine
-  -h,--help                           Affichage de l'aide
-  -o,--operation <fichier opération>  Défaut: operation.txt
-  -t,--taux <fichier taux>            Défaut: taux.txt
-  -d,--date <date de simulation>      Défaut: aujourd'hui
-  -m,--mode {jour|quinzaine}          Défaut: jour - Mode de calcul des intérêts
-
+  -h,--help				Affichage de l'aide
+  -o,--operation <fichier opération>	Défaut: operation.txt
+  -t,--taux <fichier taux>		Défaut: taux.txt
+  -d,--date <date de simulation>	Défaut: aujourd'hui
+  -m,--mode {jour|quinzaine}		Défaut: jour - Mode de calcul des intérêts
+  -b,--bourso				Boursobank (calcul sur 365 jours(bug?))
 ```
 Exemple de lancement:
 ```
