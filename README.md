@@ -100,7 +100,12 @@ Le montant des intérêts n'est plus calculé en fonction d'un nombre de quinzai
 
 Comme vous pouvez le constater, ceci introduit de légères différences dans les montants. Cependant, pour une somme présente toute l'année, il n'y aura aucune différence entre les 2 méthodes.
 
+## Remarque sur l'option "--bourso" ("-b")
 Ma banque utilise le mode en nombre de jours mais avec un bémol: Si elle prend bien en compte le 29 février dans les quinzaines, il n'est pas pris en compte dans la division: ils semblent diviser toujours par 365 au lieu de 366. Comme c'est plutôt à notre avantage, je vais me garder de le signaler!
+
+Cependant, j'ai ajouté cette option qui permet de forcer le nombre de jours total de l'année à 365 au lieu de 366 pour les années bissextiles. Cette option est inutile pour une année non bissextile.
+
+Je suppute qu'il s'agit d'un bug chez Bourso.
 
 ### Vérification effectuée
 J'ai comparé les résultats avec le fichier JxLivretV2f.ods disponible sur Internet et je conclus que c'est correct!
