@@ -103,7 +103,7 @@ Comme vous pouvez le constater, ceci introduit de légères différences dans le
 ## Remarque sur l'option "--bourso" ("-b")
 Ma banque utilise le mode en nombre de jours mais avec un bémol: Si elle prend bien en compte le 29 février dans les quinzaines, il n'est pas pris en compte dans la division: ils semblent diviser toujours par 365 au lieu de 366. Comme c'est plutôt à notre avantage, je vais me garder de le signaler!
 
-Cependant, j'ai ajouté cette option qui permet de forcer le nombre de jours total de l'année à 365 au lieu de 366 pour les années bissextiles. Cette option est inutile pour une année non bissextile.
+Cependant, j'ai ajouté cette option qui permet de forcer le nombre de jours total de l'année à 365 au lieu de 366 pour les années bissextiles. Cette option est inutile pour une année non bissextile et tout aussi inutile si vous êtes en mode "quinzaine".
 
 Je suppute qu'il s'agit d'un bug chez Bourso.
 
