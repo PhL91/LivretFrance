@@ -32,12 +32,14 @@ int getfortnight(struct tm *ptm) {
 void usage(char *argv0) {
 	printf("Utilisation: %s [OPTION]\n",basename(argv0));
 	printf("  Calcul des intérêts des livrets type France avec intérêts par quinzaine\n");
-	printf("  -h,--help\t\t\t\tAffichage de l'aide\n");
-	printf("  -o,--operation <fichier opération>\tDéfaut: operation.txt\n");
-	printf("  -t,--taux <fichier taux>\t\tDéfaut: taux.txt\n");
-	printf("  -d,--date <date de simulation>\tDéfaut: aujourd'hui\n");
-	printf("  -m,--mode {jour|quinzaine}\t\tDéfaut: jour - Mode de calcul des intérêts\n");
-	printf("  -b,--bourso\t\t\t\tBoursobank (calcul sur 365 jours(bug?))\n");
+	printf("  -h,--help                             Affichage de l'aide\n");
+	printf("  -o,--operation <fichier opération>    Défaut: operation.txt\n");
+	printf("  -t,--taux <fichier taux>              Défaut: taux.txt\n");
+	printf("  -d,--date <date de simulation>        Défaut: aujourd'hui\n");
+	printf("  -m,--mode {jour|quinzaine|jourbourso} Défaut: jour - Mode de calcul des intérêts\n");
+	printf("                                        jour: calcul en nombre de jours véritables (365/366)\n");
+	printf("                                        quinzaine: calcul en nombre de quinzaines (24)\n");
+	printf("                                        jourbourso: idem jour sauf nombre de jours/an fixé à 365\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -63,14 +65,13 @@ static struct option long_options[] = {
 	{"operation",required_argument, NULL,  'o' },
 	{"date",     required_argument, NULL,  'd' },
 	{"mode",     required_argument, NULL,  'm' },
-	{"bourso",   no_argument,       NULL,  'b' },
 	{"help",     no_argument,       NULL,  'h' },
 	{0,          0,                 0,  0 }
 };
 
 /* Elements de la ligne de commande */
 while (1) {
-	c = getopt_long(argc, argv, "ht:o:d:m:b",long_options, &option_index);
+	c = getopt_long(argc, argv, "ht:o:d:m:",long_options, &option_index);
 	if (c == -1)
 		break;
 	switch (c) {
@@ -107,20 +108,25 @@ while (1) {
 			strcpy(datesimu,optarg);
 			break;
 		case 'm':
-			jour=true;
-			if (strcmp(optarg,"jour") == 0)
-				jour=true;
+			if (strcmp(optarg,"quinzaine") == 0) {
+				jour=false;
+				bourso=false;
+				}
 			else
-				if(strcmp(optarg,"quinzaine") == 0)
-					jour=false;
-				else
-					{
-					printf("mode doit être 'jour' ou 'quinzaine'\n");
-					exit(EXIT_FAILURE);
+				if (strcmp(optarg,"jour") == 0) {
+					jour=true;
+					bourso=false;
 					}
-			break;
-		case 'b':
-			bourso=true;
+				else
+					if (strcmp(optarg,"jourbourso") == 0) {
+						jour=true;
+						bourso=true;
+						}
+					else
+						{
+						printf("mode doit être 'jour','quinzaine' ou 'jourbourso'\n");
+						exit(EXIT_FAILURE);
+						}
 			break;
 		case '?':
 			printf("Erreur dans les options!\n");
@@ -156,7 +162,9 @@ else {
 	qhui=getfortnight(&tm);
 	printf("\nDate prise en compte pour le calcul des intérêts courus: aujourd'hui\n");
 }
-printf("Mode de calcul des intérêts:                             %s\n", (jour? "jour" : "quinzaine" ));
+printf("Mode de calcul des intérêts:                             %s", (jour? "jour" : "quinzaine" ));
+if (bourso) printf(" avec option boursobank");
+printf("\n");
 /*
 Est-on en année bissextile?
 */

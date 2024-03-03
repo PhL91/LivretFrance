@@ -7,16 +7,18 @@ L'aide:
  $ ./interet -h
 Utilisation: interet [OPTION]
   Calcul des intérêts des livrets type France avec intérêts par quinzaine
-  -h,--help				Affichage de l'aide
-  -o,--operation <fichier opération>	Défaut: operation.txt
-  -t,--taux <fichier taux>		Défaut: taux.txt
-  -d,--date <date de simulation>	Défaut: aujourd'hui
-  -m,--mode {jour|quinzaine}		Défaut: jour - Mode de calcul des intérêts
-  -b,--bourso				Boursobank (calcul sur 365 jours(bug?))
+  -h,--help                             Affichage de l'aide
+  -o,--operation <fichier opération>    Défaut: operation.txt
+  -t,--taux <fichier taux>              Défaut: taux.txt
+  -d,--date <date de simulation>        Défaut: aujourd'hui
+  -m,--mode {jour|quinzaine|jourbourso} Défaut: jour - Mode de calcul des intérêts
+                                        jour: calcul en nombre de jours véritables (365/366)
+                                        quinzaine: calcul en nombre de quinzaines (24)
+                                        jourbourso: idem jour sauf nombre de jours/an fixé à 365
 ```
 Exemple de lancement:
 ```
-$ ./interet
+$ ./interet 
 
 Date prise en compte pour le calcul des intérêts courus: aujourd'hui
 Mode de calcul des intérêts:                             jour
@@ -26,12 +28,12 @@ Date      Quinzaine       Taux
 2024-01-01        1       3.00
 
 Nombre d'opérations: 5
-Date op      Montant op   Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an
-2023-12-31      5682.16                4            60      27.95          24        366     170.46
-2024-01-09      1164.00                3            45       4.29          23        351      33.49
-2024-01-23      -165.00                3            45      -0.61          23        351      -4.75
-2024-02-09      1502.00                1            14       1.72          21        320      39.40
-2024-02-15       107.00                1            14       0.12          21        320       2.81
+Date op      Montant op Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an
+2023-12-31      5682.16              4            60      27.95          24        366     170.46
+2024-01-09      1164.00              3            45       4.29          23        351      33.49
+2024-01-23      -165.00              3            45      -0.61          23        351      -4.75
+2024-02-09      1502.00              1            14       1.72          21        320      39.40
+2024-02-15       107.00              1            14       0.12          21        320       2.81
 Montant total couru:      33.48
 Montant total année:     241.41
 
@@ -100,12 +102,12 @@ Le montant des intérêts n'est plus calculé en fonction d'un nombre de quinzai
 
 Comme vous pouvez le constater, ceci introduit de légères différences dans les montants. Cependant, pour une somme présente toute l'année, il n'y aura aucune différence entre les 2 méthodes.
 
-## Remarque sur l'option "--bourso" ("-b")
-Ma banque utilise le mode en nombre de jours mais avec un bémol: Si elle prend bien en compte le 29 février dans les quinzaines, il n'est pas pris en compte dans la division: ils semblent diviser toujours par 365 au lieu de 366. Comme c'est plutôt à notre avantage, je vais me garder de le signaler!
+## Remarque sur le mode 'jourbourso'
+Boursobank utilise le mode en nombre de jours mais avec un bémol: Si elle prend bien en compte le 29 février dans les quinzaines, il n'est pas pris en compte dans la division: ils semblent diviser toujours par 365 au lieu de 366. Comme c'est plutôt à notre avantage, je vais me garder de le signaler!
 
-Cependant, j'ai ajouté cette option qui permet de forcer le nombre de jours total de l'année à 365 au lieu de 366 pour les années bissextiles. Cette option est inutile pour une année non bissextile et tout aussi inutile si vous êtes en mode "quinzaine".
+Cependant, j'ai ajouté ce mode qui permet de forcer le nombre de jours total de l'année à 365 au lieu de 366 pour les années bissextiles. Cette option est inutile pour une année non bissextile.
 
 Je suppute qu'il s'agit d'un bug chez Bourso.
 
-### Vérification effectuée
+## Vérification effectuée
 J'ai comparé les résultats avec le fichier JxLivretV2f.ods disponible sur Internet et je conclus que c'est correct!
