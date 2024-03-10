@@ -17,7 +17,8 @@ _interet_module()
 			local realcur
 			realcur="${cur##*,}"
 			prefix="${cur%$realcur}"
-			COMPREPLY=( $(compgen -P "$prefix" -o default -- $realcur) )
+			COMPREPLY=( $(compgen -f -P "$prefix" -- $realcur) )
+			compopt -o filenames
 			return 0
 			;;
 		'-d'|'--date')
