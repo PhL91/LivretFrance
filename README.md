@@ -111,3 +111,9 @@ Je suppute qu'il s'agit d'un bug chez Bourso.
 
 ## Vérification effectuée
 J'ai comparé les résultats avec le fichier JxLivretV2f.ods disponible sur Internet et je conclus que c'est correct!
+
+## Bash completion
+Le fichier interet.sh est un fichier de completion pour la commande "interet". Il suffit de "sourcer" ce fichier ou de le rajouter dans votre ~/.bash_completion:
+```
+$ echo '. ~/VotreChemin/interet.sh' >>. ~/livret/interet.sh
+```
