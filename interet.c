@@ -160,9 +160,13 @@ if (flagdatesimu == 1 ) {
 }
 else {
 	qhui=getfortnight(&tm);
-	printf("\nDate prise en compte pour le calcul des intérêts courus: aujourd'hui\n");
+	if (strftime(datesimu,20,"%F",&tm) == 0 ) {
+		printf("Erreur de conversion avec strftime de la date: %s\n",datesimu);
+		exit(EXIT_FAILURE);
+	}
+	printf("\nDate prise en compte pour le calcul des intérêts courus: %s (aujourd'hui)\n",datesimu);
 }
-printf("Mode de calcul des intérêts:                             %s", (jour? "jour" : "quinzaine" ));
+printf("Mode de calcul des intérêts                            : %s", (jour? "jour" : "quinzaine" ));
 if (bourso) printf(" avec option boursobank");
 printf("\n");
 /*
