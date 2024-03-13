@@ -153,7 +153,7 @@ tm = *localtime(&u);
 if (flagdatesimu == 1 ) {
 	qhui=getfortnight(&tmdatesimu);
 	if (strftime(datesimu,20,"%F",&tmdatesimu) == 0 ) {
-		printf("Erreur de conversion avec strftime de la date: %s\n",datesimu);
+		printf("Erreur de conversion avec strftimes\n");
 		exit(EXIT_FAILURE);
 	}
 	printf("\nDate prise en compte pour le calcul des intérêts courus: %s\n",datesimu);
@@ -161,7 +161,7 @@ if (flagdatesimu == 1 ) {
 else {
 	qhui=getfortnight(&tm);
 	if (strftime(datesimu,20,"%F",&tm) == 0 ) {
-		printf("Erreur de conversion avec strftime de la date: %s\n",datesimu);
+		printf("Erreur de conversion avec strftime\n",datesimu);
 		exit(EXIT_FAILURE);
 	}
 	printf("\nDate prise en compte pour le calcul des intérêts courus: %s (aujourd'hui)\n",datesimu);
