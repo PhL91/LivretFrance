@@ -161,7 +161,7 @@ if (flagdatesimu == 1 ) {
 else {
 	qhui=getfortnight(&tm);
 	if (strftime(datesimu,20,"%F",&tm) == 0 ) {
-		printf("Erreur de conversion avec strftime\n",datesimu);
+		printf("Erreur de conversion avec strftime\n");
 		exit(EXIT_FAILURE);
 	}
 	printf("\nDate prise en compte pour le calcul des intérêts courus: %s (aujourd'hui)\n",datesimu);
@@ -380,15 +380,17 @@ nop=k;
 printf("Nombre d'opérations: %d\n",nop);
 montanttotalhui=0;
 montanttotalan=0;
-printf("Date op      Montant op Nb quinz couru Nb jour couru Int courus Nb quinz an Nb Jour an     Int an\n");
+printf("                        Nombre de  Nombre de               Nombre de  Nombre de   Interêts\n");
+printf("      Date    Montant  quinzaines      jours    Intérêts  quinzaines   jours de         de\n");
+printf(" opération  opération     courues     courus      courus  de l'année    l'année    l'année\n");
 for (i=0;i<nop;i++) {
 	montanttotalhui=montanttotalhui+cumulinterethui[i];
 	montanttotalan=montanttotalan+cumulinteretan[i];
-	printf("%s   %#10.2f           %4d          %4d %#10.2f        %4d       %4d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],nbjourhui[i],cumulinterethui[i],nbquinzan[i],nbjouran[i],cumulinteretan[i]);
+	printf("%s %#10.2f        %4d       %4d  %#10.2f        %4d       %4d %#10.2f\n",dateop[i],montant[i],nbquinzhui[i],nbjourhui[i],cumulinterethui[i],nbquinzan[i],nbjouran[i],cumulinteretan[i]);
 }
 
-printf("Montant total couru: %#10.2f\n",montanttotalhui);
-printf("Montant total année: %#10.2f\n",montanttotalan);
+printf("Montant total intérêts courus: %#10.2f\n",montanttotalhui);
+printf("Montant total intérêts année : %#10.2f\n",montanttotalan);
 
 exit(EXIT_SUCCESS);
 }
