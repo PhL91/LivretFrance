@@ -313,7 +313,7 @@ k=0;
 while (fgets(line,cline,pfichieroperation) != NULL) {
 	if (strncmp("#",line,1) == 0) continue;
 	if (sscanf(line,"%s %s",d,m) == EOF) {
-		if (ferror(pfichiertaux) != 0) {
+		if (ferror(pfichieroperation) != 0) {
 			perror("sscanf");
 			exit(EXIT_FAILURE);
 		}

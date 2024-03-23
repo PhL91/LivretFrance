@@ -1,2 +1,2 @@
 interet: interet.c
-	gcc -o interet interet.c
+	gcc -Wall -o interet interet.c
